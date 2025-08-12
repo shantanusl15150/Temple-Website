@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Mumbai Temple</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .events-table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .events-table th {
+            background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .events-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+
+        .events-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .events-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .no-events {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .no-events i {
+            font-size: 3rem;
+            color: #DAA520;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+            font-size: 2rem;
+            color: #DAA520;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .refresh-btn {
+            background: #DAA520;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .refresh-btn:hover {
+            background: #B8860B;
+        }
+
+        @media (max-width: 768px) {
+            .events-table-container {
+                padding: 1rem;
+                overflow-x: auto;
+            }
+            
+            .events-table {
+                min-width: 600px;
+            }
+            
+            .events-table th,
+            .events-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="temple-name">Temple Events</h1>
+                <p class="temple-subtitle">Stay Connected with Our Spiritual Activities</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Events Table -->
+            <section class="events-table-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 style="color: #8B4513; margin: 0;">Upcoming Events</h2>
+                    <button class="refresh-btn" onclick="loadEvents()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div id="eventsTableContainer">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Loading events...</p>
+                    </div>
+                </div>
+            </section>
+
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="events.html" class="nav-item active">
+                <i class="fas fa-calendar"></i>
+                <span>Events</span>
+            </a>
+            <a href="donations.html" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Donations</span>
+            </a>
+            <a href="gallery.html" class="nav-item">
+                <i class="fas fa-images"></i>
+                <span>Gallery</span>
+            </a>
+            <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle"></i>
+                <span>About Us</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Function to load events from CSV file
+        async function loadEvents() {
+            const container = document.getElementById('eventsTableContainer');
+            
+            try {
+                // Show loading state
+                container.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Loading events...</p>
+                    </div>
+                `;
+
+                // Try to fetch the events.csv file
+                const response = await fetch('events.csv');
+                
+                if (!response.ok) {
+                    // If file doesn't exist, show no events message
+                    container.innerHTML = `
+                        <div class="no-events">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No events lined up</h3>
+                            <p>Stay tuned for more events and spiritual activities.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const csvText = await response.text();
+                const events = parseCSV(csvText);
+                
+                if (events.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-events">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No events lined up</h3>
+                            <p>Stay tuned for more events and spiritual activities.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Display events in table
+                displayEventsTable(events);
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                container.innerHTML = `
+                    <div class="no-events">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Unable to load events</h3>
+                        <p>Please check if events.csv file exists and try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to parse CSV data
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            const headers = lines[0].split(',').map(header => header.trim().replace(/"/g, ''));
+            const events = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = parseCSVLine(lines[i]);
+                if (values.length >= 4) {
+                    events.push({
+                        date: values[0].trim().replace(/"/g, ''),
+                        time: values[1].trim().replace(/"/g, ''),
+                        eventName: values[2].trim().replace(/"/g, ''),
+                        description: values[3].trim().replace(/"/g, '')
+                    });
+                }
+            }
+
+            return events;
+        }
+
+        // Function to parse CSV line (handles commas within quotes)
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result;
+        }
+
+        // Function to display events in table
+        function displayEventsTable(events) {
+            const container = document.getElementById('eventsTableContainer');
+            
+            let tableHTML = `
+                <table class="events-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Event Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            events.forEach(event => {
+                tableHTML += `
+                    <tr>
+                        <td><strong>${event.date}</strong></td>
+                        <td>${event.time}</td>
+                        <td><strong style="color: #8B4513;">${event.eventName}</strong></td>
+                        <td>${event.description}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = tableHTML;
+        }
+
+        // Load events when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEvents();
+        });
+    </script>
+</body>
+</html> 

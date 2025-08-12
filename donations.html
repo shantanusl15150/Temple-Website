@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations - Mumbai Temple</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="temple-name">Make a Donation</h1>
+                <p class="temple-subtitle">Support Our Temple's Spiritual Mission</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Donation Message -->
+            <section class="donation-message">
+                <div class="message-content">
+                    <i class="fas fa-heart"></i>
+                    <h2>Your Generosity Makes a Difference</h2>
+                    <p>Your donations help us maintain the temple, conduct spiritual activities, and serve the community. Every contribution, no matter how small, is deeply appreciated and used for the betterment of our sacred space.</p>
+                </div>
+            </section>
+
+
+
+            <!-- Custom Donation -->
+            <section class="custom-donation">
+                <h2>Custom Donation Amount</h2>
+                <div class="donation-form">
+                    <form id="donationForm" onsubmit="handleDonation(event)">
+                        <div class="form-group">
+                            <label for="donor-name">Your Name *</label>
+                            <input type="text" id="donor-name" name="donor-name" placeholder="Enter your full name" required>
+                            <span class="error-message" id="name-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-email">Email Address *</label>
+                            <input type="email" id="donor-email" name="donor-email" placeholder="Enter your email" required>
+                            <span class="error-message" id="email-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-phone">Phone Number *</label>
+                            <input type="tel" id="donor-phone" name="donor-phone" placeholder="Enter your phone number (10 digits)" required>
+                            <span class="error-message" id="phone-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="donation-amount">Donation Amount (₹) *</label>
+                            <input type="number" id="donation-amount" name="donation-amount" placeholder="Enter amount" min="1" required>
+                            <span class="error-message" id="amount-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="donation-purpose">Purpose (Optional)</label>
+                            <textarea id="donation-purpose" name="donation-purpose" placeholder="Specify purpose of donation (optional)"></textarea>
+                        </div>
+                        <button type="submit" class="donate-btn">Proceed to Donate</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Donation Records -->
+            <section class="donation-records" style="margin-top: 2rem;">
+                <h2 style="text-align: center; color: #8B4513; font-size: 1.5rem; margin-bottom: 1rem;">Donation Records (CSV Storage)</h2>
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <button onclick="downloadDonationRecords()" style="background: #DAA520; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-right: 1rem;">
+                        <i class="fas fa-download"></i> Download All CSV
+                    </button>
+                    <button onclick="clearDonationRecords()" style="background: #ff6b6b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Clear Records
+                    </button>
+                </div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; text-align: center;">
+                    <p style="color: #666; margin: 0;">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>CSV Storage System:</strong> Each donation generates a CSV file that downloads automatically. 
+                        Files are saved to your Downloads folder with format: <code>donation_[ID]_[DATE].csv</code>
+                    </p>
+                </div>
+                <div id="donationRecords" style="max-height: 300px; overflow-y: auto; background: white; border-radius: 10px; padding: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <!-- Records will be displayed here -->
+                </div>
+            </section>
+
+            <!-- Payment Methods -->
+            <section class="payment-methods">
+                <h2>Payment Methods</h2>
+                <div class="payment-grid">
+                    <div class="payment-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>UPI Payment</h3>
+                        <p>Pay using UPI apps like Google Pay, PhonePe, Paytm</p>
+                    </div>
+                    <div class="payment-card">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h3>Cash Donation</h3>
+                        <p>Visit temple in person for cash donations</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Donation Impact -->
+            <section class="donation-impact">
+                <h2>Your Donation's Impact</h2>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <i class="fas fa-users"></i>
+                        <h3>1000+</h3>
+                        <p>Devotees served daily</p>
+                    </div>
+                    <div class="impact-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>365</h3>
+                        <p>Days of prayers</p>
+                    </div>
+                    <div class="impact-item">
+                        <i class="fas fa-heart"></i>
+                        <h3>50+</h3>
+                        <p>Years of service</p>
+                    </div>
+                    <div class="impact-item">
+                        <i class="fas fa-hands-helping"></i>
+                        <h3>100+</h3>
+                        <p>Community programs</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="events.html" class="nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Events</span>
+            </a>
+            <a href="donations.html" class="nav-item active">
+                <i class="fas fa-heart"></i>
+                <span>Donations</span>
+            </a>
+            <a href="gallery.html" class="nav-item">
+                <i class="fas fa-images"></i>
+                <span>Gallery</span>
+            </a>
+            <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle"></i>
+                <span>About Us</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Function to set donation amount from category buttons
+        function setAmount(amount) {
+            document.getElementById('donation-amount').value = amount;
+        }
+
+        // Email validation function
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Phone validation function (10 digits for Indian numbers)
+        function validatePhone(phone) {
+            const phoneRegex = /^[6-9]\d{9}$/;
+            return phoneRegex.test(phone);
+        }
+
+        // Name validation function
+        function validateName(name) {
+            return name.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(name);
+        }
+
+        // Amount validation function
+        function validateAmount(amount) {
+            return amount > 0 && amount <= 100000;
+        }
+
+        // Generate unique donation ID
+        function generateDonationId() {
+            return 'DON' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+        }
+
+        // Store donation record
+        function storeDonationRecord(donationData) {
+            // Generate CSV content for the donation
+            const csvContent = generateCSVContent([donationData]);
+            
+            // Create and download CSV file
+            downloadCSVFile(csvContent, `donation_${donationData.donationId}_${new Date().toISOString().split('T')[0]}.csv`);
+            
+            // Also store in sessionStorage for current session display
+            sessionStorage.setItem('currentDonation', JSON.stringify(donationData));
+            
+            // Simulate server-side storage (in real implementation, this would be an API call)
+            simulateServerStorage(donationData);
+            
+            displayDonationRecords();
+        }
+
+        // Generate CSV content from donation data
+        function generateCSVContent(donations) {
+            const headers = [
+                'Donation ID',
+                'Donor Name',
+                'Email',
+                'Phone',
+                'Amount (₹)',
+                'Purpose',
+                'Timestamp',
+                'Date',
+                'Time',
+                'Status',
+                'Payment Method',
+                'Category',
+                'Device Type',
+                'Browser',
+                'Screen Resolution',
+                'Timezone',
+                'Form Validation',
+                'User Agent'
+            ];
+
+            const csvRows = [headers.join(',')];
+
+            donations.forEach(donation => {
+                const row = [
+                    `"${donation.donationId}"`,
+                    `"${donation.donorName}"`,
+                    `"${donation.email}"`,
+                    `"${donation.phone}"`,
+                    donation.amount,
+                    `"${donation.purpose}"`,
+                    `"${donation.timestamp}"`,
+                    `"${donation.date}"`,
+                    `"${donation.time}"`,
+                    `"${donation.status}"`,
+                    `"${donation.paymentMethod}"`,
+                    `"${donation.category}"`,
+                    `"${donation.metadata.deviceType}"`,
+                    `"${donation.metadata.browser}"`,
+                    `"${donation.metadata.screenResolution}"`,
+                    `"${donation.metadata.timezone}"`,
+                    `"${donation.metadata.formValidation}"`,
+                    `"${donation.userAgent.replace(/"/g, '""')}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            return csvRows.join('\n');
+        }
+
+        // Download CSV file
+        function downloadCSVFile(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // Generate comprehensive CSV with all donations
+        function generateAllDonationsCSV() {
+            const records = JSON.parse(localStorage.getItem('donationRecords') || '[]');
+            const serverRecords = JSON.parse(localStorage.getItem('serverDonationRecords') || '[]');
+            
+            if (records.length === 0) {
+                alert('No donation records to export.');
+                return;
+            }
+
+            // Combine all records
+            const allRecords = [...records, ...serverRecords];
+            
+            // Remove duplicates based on donation ID
+            const uniqueRecords = allRecords.filter((record, index, self) => 
+                index === self.findIndex(r => r.donationId === record.donationId)
+            );
+
+            const csvContent = generateCSVContent(uniqueRecords);
+            const filename = `all_donations_${new Date().toISOString().split('T')[0]}.csv`;
+            
+            downloadCSVFile(csvContent, filename);
+        }
+
+        // Simulate server-side storage
+        function simulateServerStorage(donationData) {
+            // In a real implementation, this would be an API call to your server
+            console.log('Simulating server storage for donation:', donationData.donationId);
+            
+            // Create a server-side record (simulated)
+            const serverRecord = {
+                ...donationData,
+                serverTimestamp: new Date().toISOString(),
+                serverId: 'SRV_' + Date.now(),
+                storageLocation: 'server_database',
+                backupStatus: 'stored'
+            };
+            
+            // Store in a separate localStorage key to simulate server storage
+            const serverRecords = JSON.parse(localStorage.getItem('serverDonationRecords') || '[]');
+            serverRecords.push(serverRecord);
+            localStorage.setItem('serverDonationRecords', JSON.stringify(serverRecords));
+        }
+
+        // Payment verification system
+        function verifyPayment(donationId) {
+            // In a real implementation, this would check with payment gateway
+            const records = JSON.parse(localStorage.getItem('donationRecords') || '[]');
+            const donation = records.find(record => record.donationId === donationId);
+            
+            if (donation) {
+                // Simulate payment verification
+                const paymentVerified = Math.random() > 0.3; // 70% success rate simulation
+                
+                if (paymentVerified) {
+                    donation.status = 'Payment Verified';
+                    donation.paymentVerifiedAt = new Date().toISOString();
+                    donation.paymentReference = 'TXN_' + Date.now();
+                    donation.verificationMethod = 'QR Code Scan';
+                    
+                    // Update both local and server records
+                    localStorage.setItem('donationRecords', JSON.stringify(records));
+                    
+                    const serverRecords = JSON.parse(localStorage.getItem('serverDonationRecords') || '[]');
+                    const serverRecord = serverRecords.find(record => record.donationId === donationId);
+                    if (serverRecord) {
+                        serverRecord.status = 'Payment Verified';
+                        serverRecord.paymentVerifiedAt = new Date().toISOString();
+                        localStorage.setItem('serverDonationRecords', JSON.stringify(serverRecords));
+                    }
+                    
+                    // Generate updated CSV for verified payment
+                    const updatedCSV = generateCSVContent([donation]);
+                    downloadCSVFile(updatedCSV, `verified_donation_${donationId}_${new Date().toISOString().split('T')[0]}.csv`);
+                    
+                    return true;
+                } else {
+                    donation.status = 'Payment Pending';
+                    donation.lastVerificationAttempt = new Date().toISOString();
+                    localStorage.setItem('donationRecords', JSON.stringify(records));
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        // Manual payment verification (for temple admin)
+        function manualPaymentVerification(donationId) {
+            const records = JSON.parse(localStorage.getItem('donationRecords') || '[]');
+            const donation = records.find(record => record.donationId === donationId);
+            
+            if (donation) {
+                donation.status = 'Manually Verified';
+                donation.manuallyVerifiedAt = new Date().toISOString();
+                donation.verifiedBy = 'Temple Admin';
+                donation.verificationNotes = prompt('Enter verification notes (optional):') || '';
+                
+                localStorage.setItem('donationRecords', JSON.stringify(records));
+                
+                // Generate updated CSV for manually verified payment
+                const updatedCSV = generateCSVContent([donation]);
+                downloadCSVFile(updatedCSV, `manually_verified_donation_${donationId}_${new Date().toISOString().split('T')[0]}.csv`);
+                
+                displayDonationRecords();
+                alert(`Payment manually verified for donation ID: ${donationId}`);
+            }
+        }
+
+        // Enhanced display with payment status
+        function displayDonationRecords() {
+            const records = JSON.parse(localStorage.getItem('donationRecords') || '[]');
+            const container = document.getElementById('donationRecords');
+            
+            if (records.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">No donation records found.</p>';
+                return;
+            }
+
+            let html = '<div style="display: grid; gap: 1rem;">';
+            records.slice(-5).reverse().forEach(record => {
+                const statusColor = getStatusColor(record.status);
+                const statusIcon = getStatusIcon(record.status);
+                
+                html += `
+                    <div style="border: 1px solid #eee; border-radius: 8px; padding: 1rem; background: #f9f9f9;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong style="color: #8B4513;">${record.donorName}</strong>
+                            <span style="color: #DAA520; font-weight: bold;">₹${record.amount}</span>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666;">
+                            <div>📧 ${record.email}</div>
+                            <div>📱 ${record.phone}</div>
+                            <div>📅 ${new Date(record.timestamp).toLocaleString()}</div>
+                            ${record.purpose ? `<div>🎯 ${record.purpose}</div>` : ''}
+                            <div style="font-size: 0.8rem; color: #999;">ID: ${record.donationId}</div>
+                            <div style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; background: ${statusColor}; color: white; border-radius: 3px; display: inline-block; font-size: 0.8rem;">
+                                ${statusIcon} ${record.status}
+                            </div>
+                            ${record.status === 'Pending Payment' ? 
+                                `<button onclick="manualPaymentVerification('${record.donationId}')" style="background: #28a745; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; margin-left: 0.5rem; cursor: pointer;">
+                                    ✓ Verify Payment
+                                </button>` : ''
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Helper function to get status color
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Payment Verified': return '#28a745';
+                case 'Manually Verified': return '#17a2b8';
+                case 'Pending Payment': return '#ffc107';
+                case 'Payment Failed': return '#dc3545';
+                default: return '#6c757d';
+            }
+        }
+
+        // Helper function to get status icon
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'Payment Verified': return '✅';
+                case 'Manually Verified': return '👨‍💼';
+                case 'Pending Payment': return '⏳';
+                case 'Payment Failed': return '❌';
+                default: return '❓';
+            }
+        }
+
+        // Export all donations as CSV
+        function downloadDonationRecords() {
+            generateAllDonationsCSV();
+        }
+
+        // Clear donation records
+        function clearDonationRecords() {
+            if (confirm('Are you sure you want to clear all donation records? This action cannot be undone.')) {
+                localStorage.removeItem('donationRecords');
+                localStorage.removeItem('serverDonationRecords');
+                displayDonationRecords();
+                alert('Donation records cleared successfully.');
+            }
+        }
+
+        // Real-time validation
+        document.getElementById('donor-name').addEventListener('input', function() {
+            const name = this.value;
+            const errorElement = document.getElementById('name-error');
+            
+            if (!validateName(name)) {
+                errorElement.textContent = 'Please enter a valid name (minimum 2 characters, letters only)';
+                errorElement.style.display = 'block';
+                this.style.borderColor = '#ff6b6b';
+            } else {
+                errorElement.style.display = 'none';
+                this.style.borderColor = '#DAA520';
+            }
+        });
+
+        document.getElementById('donor-email').addEventListener('input', function() {
+            const email = this.value;
+            const errorElement = document.getElementById('email-error');
+            
+            if (!validateEmail(email)) {
+                errorElement.textContent = 'Please enter a valid email address';
+                errorElement.style.display = 'block';
+                this.style.borderColor = '#ff6b6b';
+            } else {
+                errorElement.style.display = 'none';
+                this.style.borderColor = '#DAA520';
+            }
+        });
+
+        document.getElementById('donor-phone').addEventListener('input', function() {
+            const phone = this.value;
+            const errorElement = document.getElementById('phone-error');
+            
+            if (!validatePhone(phone)) {
+                errorElement.textContent = 'Please enter a valid 10-digit phone number';
+                errorElement.style.display = 'block';
+                this.style.borderColor = '#ff6b6b';
+            } else {
+                errorElement.style.display = 'none';
+                this.style.borderColor = '#DAA520';
+            }
+        });
+
+        document.getElementById('donation-amount').addEventListener('input', function() {
+            const amount = parseInt(this.value);
+            const errorElement = document.getElementById('amount-error');
+            
+            if (!validateAmount(amount)) {
+                errorElement.textContent = 'Please enter a valid amount (1 - 100,000)';
+                errorElement.style.display = 'block';
+                this.style.borderColor = '#ff6b6b';
+            } else {
+                errorElement.style.display = 'none';
+                this.style.borderColor = '#DAA520';
+            }
+        });
+
+        // Handle form submission
+        function handleDonation(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('donor-name').value;
+            const email = document.getElementById('donor-email').value;
+            const phone = document.getElementById('donor-phone').value;
+            const amount = parseInt(document.getElementById('donation-amount').value);
+            const purpose = document.getElementById('donation-purpose').value;
+            
+            // Validate all fields
+            if (!validateName(name) || !validateEmail(email) || !validatePhone(phone) || !validateAmount(amount)) {
+                alert('Please correct the errors in the form before proceeding.');
+                return;
+            }
+            
+            // Create donation record with metadata
+            const donationRecord = {
+                donationId: generateDonationId(),
+                donorName: name,
+                email: email,
+                phone: phone,
+                amount: amount,
+                purpose: purpose || 'General Donation',
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString(),
+                userAgent: navigator.userAgent,
+                ipAddress: 'Not available (client-side)',
+                status: 'Pending Payment',
+                paymentMethod: 'QR Code',
+                category: getDonationCategory(amount),
+                metadata: {
+                    formValidation: 'Passed',
+                    deviceType: getDeviceType(),
+                    browser: getBrowserInfo(),
+                    screenResolution: `${screen.width}x${screen.height}`,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                }
+            };
+            
+            // Store the donation record
+            storeDonationRecord(donationRecord);
+            
+            // Show success message
+            alert(`Thank you for your donation of ₹${amount}! Your donation ID is: ${donationRecord.donationId}\n\nYou will be redirected to the payment page.`);
+            
+            // If all validations pass, redirect to QR code
+            window.location.href = 'transaction.html';
+        }
+
+        // Helper function to get donation category based on amount
+        function getDonationCategory(amount) {
+            if (amount <= 200) return 'Small Donation';
+            if (amount <= 500) return 'Medium Donation';
+            if (amount <= 1000) return 'Large Donation';
+            return 'Major Donation';
+        }
+
+        // Helper function to get device type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent;
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+                return 'Mobile';
+            } else if (/Tablet|iPad/i.test(userAgent)) {
+                return 'Tablet';
+            } else {
+                return 'Desktop';
+            }
+        }
+
+        // Helper function to get browser info
+        function getBrowserInfo() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Chrome')) return 'Chrome';
+            if (userAgent.includes('Firefox')) return 'Firefox';
+            if (userAgent.includes('Safari')) return 'Safari';
+            if (userAgent.includes('Edge')) return 'Edge';
+            return 'Unknown Browser';
+        }
+
+        // Load donation records when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            displayDonationRecords();
+        });
+    </script>
+</body>
+</html> 

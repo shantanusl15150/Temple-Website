@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Temple - Welcome</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="temple-name">Mumbai Temple</h1>
+                <p class="temple-subtitle">A Sacred Place of Peace & Devotion</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h2>Welcome to Our Sacred Temple</h2>
+                    <p>Experience divine peace and spiritual enlightenment in the heart of Mumbai</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <i class="fas fa-users"></i>
+                            <span>1000+ Devotees Daily</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Daily Aarti</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-heart"></i>
+                            <span>50+ Years Legacy</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Info Section -->
+            <section class="quick-info">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Timings</h3>
+                        <p>Open: 5:00 AM - 10:00 PM</p>
+                        <p>Morning Aarti: 6:00 AM</p>
+                        <p>Evening Aarti: 7:00 PM</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <a href="https://maps.app.goo.gl/uaMuSKr26kWMemUE8"><h3>Location</h3>
+                         </a>
+                            <p>Parampujya Jambhekar Maharaj Path, Dadar West</p>
+                            <p>Mumbai, Maharashtra</p>
+                            <p>India - 400028</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <h3>Contact</h3>
+                        <p>Phone: +91 22 1234 5678</p>
+                        <p>Email: info@mumbaitemple.com</p>
+                        <p>Emergency: +91 98765 43210</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Events -->
+            <section class="featured-events">
+                <h2>Upcoming Events</h2>
+                <div id="featuredEventsGrid" class="events-grid">
+                    <div class="loading-events">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading upcoming events...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="events.html" class="nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Events</span>
+            </a>
+            <a href="donations.html" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Donations</span>
+            </a>
+            <a href="gallery.html" class="nav-item">
+                <i class="fas fa-images"></i>
+                <span>Gallery</span>
+            </a>
+            <a href="about.html" class="nav-item">
+                <i class="fas fa-info-circle"></i>
+                <span>About Us</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Function to parse CSV content
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const events = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim());
+                const event = {};
+                headers.forEach((header, index) => {
+                    event[header] = values[index] || '';
+                });
+                events.push(event);
+            }
+            
+            return events;
+        }
+
+        // Function to parse date and extract day and month
+        function parseEventDate(dateStr) {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                // If date parsing fails, try to extract from format like "15 Dec 2024"
+                const parts = dateStr.split(' ');
+                if (parts.length >= 2) {
+                    return {
+                        day: parts[0],
+                        month: parts[1]
+                    };
+                }
+                return { day: 'TBD', month: 'TBD' };
+            }
+            
+            const day = date.getDate();
+            const month = date.toLocaleDateString('en-US', { month: 'short' });
+            return { day, month };
+        }
+
+        // Function to load and display featured events
+        async function loadFeaturedEvents() {
+            const eventsGrid = document.getElementById('featuredEventsGrid');
+            
+            try {
+                const response = await fetch('events.csv');
+                if (!response.ok) {
+                    eventsGrid.innerHTML = `
+                        <div class="no-events">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No upcoming events</h3>
+                            <p>Stay tuned for more events and spiritual activities.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const csvText = await response.text();
+                const events = parseCSV(csvText);
+                
+                if (events.length === 0) {
+                    eventsGrid.innerHTML = `
+                        <div class="no-events">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No upcoming events</h3>
+                            <p>Stay tuned for more events and spiritual activities.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort events by date and take the latest 2
+                const sortedEvents = events.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateA - dateB;
+                });
+                
+                const latestEvents = sortedEvents.slice(0, 2);
+                
+                // Display the events
+                const eventsHTML = latestEvents.map(event => {
+                    const dateInfo = parseEventDate(event.date);
+                    return `
+                        <div class="event-card">
+                            <div class="event-date">
+                                <span class="day">${dateInfo.day}</span>
+                                <span class="month">${dateInfo.month}</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>${event['event name'] || 'Event'}</h3>
+                                <p>${event.description || 'Event details coming soon'}</p>
+                                <span class="time">${event.time || 'Time TBD'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                eventsGrid.innerHTML = eventsHTML;
+                
+            } catch (error) {
+                console.error('Error loading featured events:', error);
+                eventsGrid.innerHTML = `
+                    <div class="no-events">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Unable to load events</h3>
+                        <p>Please check if events.csv file exists and try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load featured events when page loads
+        document.addEventListener('DOMContentLoaded', loadFeaturedEvents);
+    </script>
+</body>
+</html> 
